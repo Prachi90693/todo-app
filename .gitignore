@@ -1,6 +1,14 @@
+# Terraform — never commit these
 .terraform/
-*.tfstate
-*.tfstate.backup
-*.pem
-terraform-provider-aws*
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup
+*.tfvars
+
+# Python
+__pycache__/
+*.pyc
 .env
+
+# Docker
+*.log
