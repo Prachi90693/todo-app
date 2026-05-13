@@ -40,7 +40,8 @@ resource "aws_security_group" "todo_sg" {
 # RESOURCE 2: EC2 Instance (your virtual server)
 resource "aws_instance" "todo_server" {
   ami           = "ami-0c7217cdde317cfec"  # Ubuntu 22.04 in us-east-1
-  instance_type = "t3.micro"               # Free tier — 1 CPU, 1GB RAM
+  instance_type = "t3.micro"         
+  key_name      = "Key pair"       # Free tier — 1 CPU, 1GB RAM
 
   vpc_security_group_ids = [aws_security_group.todo_sg.id]
 
