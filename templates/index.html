@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Todo App</title>
+  <style>
+    body { font-family: Arial; max-width: 500px; margin: 40px auto; padding: 0 20px; }
+    input { padding: 8px; width: 70%; border: 1px solid #ccc; border-radius: 4px; }
+    button { padding: 8px 16px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    li { margin: 8px 0; }
+    a { color: red; margin-left: 10px; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <h1>My Todo List</h1>
+  <!-- Form submits to /add route in app.py -->
+  <form action="/add" method="POST">
+    <input type="text" name="task" placeholder="Add a new task..." required>
+    <button type="submit">Add</button>
+  </form>
+
+  <ul>
+    <!-- Loop through todos list passed from app.py -->
+    {% for todo in todos %}
+      <li>
+        {{ task }}
+        <a href="/delete/{{ loop.index0}}">Delete</a>
+      </li>
+    {% endfor %}
+    {% if todos|length == 0 %}
+      <li style="color:gray">No tasks yet. Add one above!</li>
+    {% endif %}
+  </ul>
+</body>
+</html>
