@@ -1,23 +1,29 @@
-# Start from official Python 3.11 on minimal Linux
-# This image already has Python installed — you don't need to
+# Stage 1: build dependencies
+FROM python:3.11-slim AS builder
+
+WORKDIR /build
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
+
+# Stage 2: minimal runtime image
 FROM python:3.11-slim
 
-# Set the working directory inside the container
-# All future commands run from this folder
+# Run as non-root user (security best practice)
+RUN addgroup --system appgroup && adduser --system --ingroup appgroup appuser
+
 WORKDIR /app
 
-# Copy requirements.txt FIRST (before the rest of your code)
-# WHY: Docker caches each step. If requirements.txt hasn't changed,
-# it skips pip install on the next build — saving you 30+ seconds
-COPY requirenments.txt .
-# Install Flask inside the container
-RUN pip install --no-cache-dir -r requirenments.txt
+# Copy installed packages from builder stage
+COPY --from=builder /install /usr/local
 
-# Now copy everything else (app.py, templates/, etc.)
-COPY . .
+# Copy app code
+COPY app.py .
+COPY templates/ templates/
+COPY requirements.txt .
 
-# Document that the app uses port 5000
+USER appuser
+
 EXPOSE 5000
-# The command that runs when a container starts
-# List format ["python","app.py"] is safer than "python app.py"
+
 CMD ["python", "app.py"]
