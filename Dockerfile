@@ -1,5 +1,5 @@
 # Stage 1: build dependencies
-FROM python:3.11-slim AS builder
+FROM python:3.12-slim AS builder
 
 WORKDIR /build
 
@@ -7,7 +7,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 
 # Stage 2: minimal runtime image
-FROM python:3.11-slim
+FROM python:3.12-slim
 
 # Run as non-root user (security best practice)
 RUN addgroup --system appgroup && adduser --system --ingroup appgroup appuser
@@ -26,4 +26,4 @@ USER appuser
 
 EXPOSE 5000
 
-CMD ["python", "app.py"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "2", "app:app"]
